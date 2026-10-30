@@ -62,3 +62,4 @@ Formato: `AAAA-MM-DD | agente | WP | qué pasó`. Solo agregar al final.
 - 2026-10-30 | Claude Code | WP-02 | Revisión G3 en docs/reviews/WP-02-design-2026-10-30.md. Kiro CLI corrigió design.md y tasks.md (H1-H6). Pendiente: hooks del generador con version "v1". G3 pendiente de Henry.
 - 2026-10-30 | Claude Code | WP-02 | Henry ordenó en el chat: entrega simple, funcional e ingeniosa en menos de 60 minutos. Alcance recortado a core + CLI (sin MCP, Power, workflow ni dashboard). Se toma como aprobación de G3 con ese recorte. Pruebas con node:test + fast-check, TS ejecutado directo en Node 24.
 - 2026-10-30 | Claude Code | WP-02 | Kiro CLI generó packages/core, packages/cli, fixtures y README. 22/22 pruebas. excellent 93, minimal 28, trap 0, autoescaneo 62. Revisión en docs/reviews/WP-02-core-2026-10-30.md (C1-C4 corregidos por Kiro).
+- 2026-10-30 | Claude Code | WP-02 | Henry aprobó en el chat fusionar WP-02 a main y subirlo.
