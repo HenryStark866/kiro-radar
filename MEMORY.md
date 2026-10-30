@@ -52,3 +52,4 @@ Formato: `AAAA-MM-DD | agente | WP | qué pasó`. Solo agregar al final.
 - 2026-10-30 | Claude Code | WP-00 | Plan ajustado a Kiro Free y creado docs/PASO-A-PASO.md. Dashboard y despliegue pasan a opcionales.
 - 2026-10-30 | Kiro | WP-00 | Henry aprobó G0. WP-00 completo. WP-01 en curso.
 - 2026-10-30 | Kiro | WP-01 | Creada rama wp/WP-01. Hooks: scope-guard, secret-guard, evidence-ledger, test-on-save, spec-sync, session-handoff. `.kiroignore` creado. Commits enviados a origin.
+- 2026-10-30 | Kiro | WP-01 | Corrección de hooks tras revisión G1. 7 hallazgos corregidos: normalización de rutas, bloqueo si no se puede evaluar,matcher write, exclusión .kiro/specs/, bloque confirm en session-handoff, evidence-ledger con spec/tarea reales, TOOLS-MATRIX actualizado. Commits en wp/WP-01.
