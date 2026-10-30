@@ -1,0 +1,13 @@
+{
+  "name": "radar-reviewer",
+  "description": "Reviews code and writes findings to docs/reviews/ without modifying source code.",
+  "tools": ["read_file", "search_files"],
+  "resources": ["docs/reviews/", "packages/"],
+  "permissions": {
+    "rules": [
+      {"allow": "read", "path": "**"},
+      {"allow": "write", "path": "docs/reviews/**"},
+      {"deny": "write", "path": "packages/**"}
+    ]
+  }
+}

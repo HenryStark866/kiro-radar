@@ -1,0 +1,19 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "type": "PreToolUse",
+      "description": "Basic guard before tool use",
+      "action": {
+        "command": "echo 'pre-tool-use check'"
+      }
+    },
+    {
+      "type": "PostToolUse",
+      "description": "Log after tool use",
+      "action": {
+        "command": "echo 'post-tool-use log'"
+      }
+    }
+  ]
+}

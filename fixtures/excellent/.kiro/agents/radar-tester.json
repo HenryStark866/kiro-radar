@@ -1,0 +1,13 @@
+{
+  "name": "radar-tester",
+  "description": "Runs and writes tests for Kiro Radar core engine.",
+  "tools": ["read_file", "write_file", "run_command"],
+  "resources": ["packages/core/test/", "fixtures/"],
+  "permissions": {
+    "rules": [
+      {"allow": "read", "path": "**"},
+      {"allow": "write", "path": "packages/core/test/**"},
+      {"deny": "execute", "path": "fixtures/**"}
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "radar-ci",
+  "description": "CI workflow: lint, test, scan in parallel then badge.",
+  "nodes": [
+    {
+      "id": "install",
+      "type": "command",
+      "command": "npm ci"
+    },
+    {
+      "id": "parallel-checks",
+      "type": "parallel",
+      "parallel": true,
+      "depends_on": ["install"],
+      "steps": [
+        {"id": "test", "type": "command", "command": "node --test packages/core/test/"},
+        {"id": "scan", "type": "command", "command": "node packages/cli/bin.mjs scan ."}
+      ]
+    },
+    {
+      "id": "badge",
+      "type": "command",
+      "command": "node packages/cli/bin.mjs scan . --badge badge.svg",
+      "depends_on": ["parallel-checks"],
+      "repeat": {"on_failure": true, "max_retries": 2}
+    }
+  ]
+}

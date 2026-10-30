@@ -1,0 +1,10 @@
+{
+  "name": "kiro-power-radar",
+  "version": "0.1.0",
+  "description": "Kiro Power: scan a repo and score its Kiro usage in 10 dimensions.",
+  "type": "module",
+  "kiro": {
+    "power": true,
+    "command": "kiro-radar"
+  }
+}
