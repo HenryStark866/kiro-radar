@@ -73,6 +73,38 @@ npm test
 npx kiro-radar scan .
 ```
 
+## Servidor MCP y Power
+
+Kiro Radar expone sus funciones como herramientas MCP para que puedas usarlas directamente desde el chat de Kiro.
+
+**Iniciar el servidor manualmente:**
+
+```bash
+node packages/mcp/server.mjs
+```
+
+**Herramientas disponibles:**
+
+| Herramienta | Qué hace |
+|---|---|
+| `scan_repository` | Escanea un repo y devuelve totalScore + desglose por dimensión |
+| `next_moves` | Devuelve las 3 jugadas con mayor ganancia de puntos |
+
+**Registro automático (`.kiro/settings/mcp.json`):**
+
+```json
+{
+  "mcpServers": {
+    "kiro-radar": {
+      "command": "node",
+      "args": ["packages/mcp/server.mjs"]
+    }
+  }
+}
+```
+
+**Power instalable:** `power/kiro-radar/` — incluye el servidor MCP, la skill `kiro-radar-coach` y documentación. Instálalo desde Kiro → Settings → Powers → Install local Power.
+
 ## Generado por Kiro
 
 Todo el código fuente, specs, hooks, skills y configuración de este proyecto fue generado por **Kiro** (sesión principal + subagentes). El humano aprobó compuertas y registró decisiones en `MEMORY.md`.
