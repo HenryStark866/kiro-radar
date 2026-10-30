@@ -4,10 +4,10 @@ Fuente de verdad del **estado**. Las reglas viven en `AGENTS.md`; el detalle del
 
 ## Estado actual
 
-- **Fase:** 1, WP-01 con G1 aprobada; falta P2.
+- **Fase:** 2, WP-02 (spec radar-core).
 - **Repositorio:** https://github.com/HenryStark866/kiro-radar (público, rama `main`).
 - **Kiro:** instalado, sesión de henrytaborda57@gmail.com, plan Free con 0 de 50 créditos usados el 2026-10-30. El contador se reinicia el 2026-11-01.
-- **Siguiente paso:** seguir `docs/PASO-A-PASO.md` desde "Antes de empezar".
+- **Siguiente paso:** Henry revisa `.kiro/specs/radar-core/requirements.md` (compuerta G2).
 - **Fecha límite del reto:** desconocida. Henry debe confirmarla.
 - **Canal de entrega:** desconocido. Henry debe confirmarlo.
 
@@ -55,3 +55,4 @@ Formato: `AAAA-MM-DD | agente | WP | qué pasó`. Solo agregar al final.
 - 2026-10-30 | Kiro | WP-01 | Creada rama wp/WP-01. Hooks: scope-guard, secret-guard, evidence-ledger, test-on-save, spec-sync, session-handoff. `.kiroignore` creado. Commits enviados a origin.
 - 2026-10-30 | Kiro | WP-01 | Corrección de hooks tras revisión G1. 7 hallazgos corregidos: normalización de rutas, bloqueo si no se puede evaluar,matcher write, exclusión .kiro/specs/, bloque confirm en session-handoff, evidence-ledger con spec/tarea reales, TOOLS-MATRIX actualizado. Commits en wp/WP-01.
 - 2026-10-30 | Claude Code | WP-01 | Henry aprobó G1 en el chat.
+- 2026-10-30 | Claude Code | WP-01 | Henry aprobó fusionar WP-01 a main y subirlo.
