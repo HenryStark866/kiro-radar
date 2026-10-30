@@ -5,19 +5,9 @@ const fs = require('fs');
 const { execSync } = require('child_process');
 const path = require('path');
 
-function getPackageRoot(filePath) {
-  const packagesRoot = path.join(__dirname, '..', '..', 'packages');
-  const relPath = path.relative(packagesRoot, filePath);
-  if (relPath.startsWith('..') || relPath === '') return null;
-
-  const parts = relPath.split(path.sep);
-  const packageDir = path.join(packagesRoot, parts[0]);
-
-  if (fs.existsSync(path.join(packageDir, 'package.json'))) {
-    return packageDir;
-  }
-
-  return null;
+function normalizePath(filePath) {
+  // Normalize Windows backslashes to forward slashes for comparison
+  return filePath.replace(/\\/g, '/');
 }
 
 function main() {
@@ -33,24 +23,30 @@ function main() {
         filePath = input.params.path;
       } else if (input.filePath) {
         filePath = input.filePath;
+      } else if (input.tool_input && input.tool_input.path) {
+        filePath = input.tool_input.path;
       }
 
       if (!filePath) {
         process.exit(0);
       }
 
-      const rootDir = path.join(__dirname, '..', '..');
-      const relPath = path.relative(rootDir, filePath);
+      // Normalize path
+      filePath = normalizePath(filePath);
 
+      const rootDir = normalizePath(path.join(__dirname, '..', '..'));
+      const relPath = normalizePath(path.relative(rootDir, filePath));
+
+      // Check if starts with packages/ (now works on Windows)
       if (!relPath.startsWith('packages/')) {
         process.exit(0);
       }
 
-      const packagesRoot = path.join(rootDir, 'packages');
-      const relPathFromPackages = path.relative(packagesRoot, filePath);
-      const parts = relPathFromPackages.split(path.sep);
+      const packagesRoot = normalizePath(path.join(rootDir, 'packages'));
+      const relPathFromPackages = normalizePath(path.relative(packagesRoot, filePath));
+      const parts = relPathFromPackages.split('/');
 
-      if (parts.length === 0) {
+      if (parts.length === 0 || parts[0] === '') {
         process.exit(0);
       }
 

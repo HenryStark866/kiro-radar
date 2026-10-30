@@ -4,13 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
-function getActiveSpecAndTask() {
-  // Try to read from task execution context
-  // In practice, this would come from stdin or environment
-  return { spec: 'unknown', task: 'unknown' };
-}
-
-function getCurrentBranch() {
+function getBranch() {
   try {
     const { execSync } = require('child_process');
     const branch = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8', cwd: __dirname }).trim();
@@ -20,37 +14,40 @@ function getCurrentBranch() {
   }
 }
 
+function extractSpecAndTask(input) {
+  // Try different JSON formats based on real payloads
+  if (input.task) {
+    const spec = input.task.spec || 'unknown';
+    const taskName = input.task.name || input.task.task || 'unknown';
+    return { spec, task: taskName };
+  }
+  if (input.spec && input.taskName) {
+    return { spec: input.spec, task: input.taskName };
+  }
+  // Default to unknown if no data
+  return { spec: 'unknown', task: 'unknown' };
+}
+
 function main() {
   let toolInput = '';
-  let done = false;
+  process.stdin.on('data', chunk => { toolInput += chunk; });
 
-  // Try to read stdin if data is available immediately
-  if (process.stdin.isTTY) {
-    // Terminal input, run directly
-    runLedger();
-    done = true;
-  } else if (process.stdin.readable) {
-    process.stdin.on('data', chunk => { toolInput += chunk; });
-    process.stdin.on('end', () => { runLedger(); done = true; });
-  } else {
-    runLedger();
-    done = true;
-  }
-
-  // Fallback for non-TTY without stdin data
-  setTimeout(() => {
-    if (!done) {
-      runLedger();
-    }
-  }, 100);
-
-  function runLedger() {
+  process.stdin.on('end', () => {
     try {
       const rootDir = path.join(__dirname, '..', '..');
       const ledgerPath = path.join(rootDir, 'docs', 'evidence', 'ledger.jsonl');
 
-      const { spec, task } = getActiveSpecAndTask();
-      const branch = getCurrentBranch();
+      let spec = 'unknown';
+      let task = 'unknown';
+
+      if (toolInput) {
+        const input = JSON.parse(toolInput);
+        const { spec: s, task: t } = extractSpecAndTask(input);
+        spec = s;
+        task = t;
+      }
+
+      const branch = getBranch();
 
       const entry = {
         date: new Date().toISOString().split('T')[0],
@@ -72,7 +69,7 @@ function main() {
       console.error('evidence-ledger error:', e.message);
       process.exit(0);
     }
-  }
+  });
 }
 
 main();

@@ -30,37 +30,50 @@ function containsSecrets(content) {
   return false;
 }
 
+function extractFileContent(input) {
+  // Try different JSON formats based on real payloads
+  if (input.params && input.params.text) {
+    return input.params.text;
+  }
+  if (input.tool_input && input.tool_input.text) {
+    return input.tool_input.text;
+  }
+  if (input.arguments && input.arguments[1]) {
+    return input.arguments[1];
+  }
+  if (input.fileContent) {
+    return input.fileContent;
+  }
+  return null;
+}
+
 function main() {
   let toolInput = '';
   process.stdin.on('data', chunk => { toolInput += chunk; });
-  
+
   process.stdin.on('end', () => {
     try {
       const input = JSON.parse(toolInput);
-      
-      let fileContent = '';
-      let filePath = '';
-      
-      if (input.params) {
-        if (input.params.text) {
-          fileContent = input.params.text;
-        }
-        if (input.params.path) {
-          filePath = input.params.path;
-        }
-      } else if (input.arguments) {
-        fileContent = input.arguments[1] || '';
-        filePath = input.arguments[0] || '';
-      } else if (input.fileContent) {
-        fileContent = input.fileContent;
-        filePath = input.filePath || '';
+
+      const fileContent = extractFileContent(input);
+
+      // If content cannot be determined, block
+      if (fileContent === null) {
+        const message = JSON.stringify({
+          hookSpecificOutput: {
+            permissionDecision: 'deny',
+            permissionDecisionReason: 'No se pudo determinar el contenido de escritura. Bloqueo por seguridad.'
+          }
+        });
+        console.log(message);
+        process.exit(2);
       }
 
       if (containsSecrets(fileContent)) {
         const message = JSON.stringify({
           hookSpecificOutput: {
             permissionDecision: 'deny',
-            permissionDecisionReason: `Posibles secretos o tokens detectados en ${filePath || 'archivo'}. No se permite escritura.`
+            permissionDecisionReason: 'Posibles secretos o tokens detectados. No se permite escritura.'
           }
         });
         console.log(message);
@@ -69,7 +82,15 @@ function main() {
 
       process.exit(0);
     } catch (e) {
-      process.exit(0);
+      // Error parsing, block
+      const message = JSON.stringify({
+        hookSpecificOutput: {
+          permissionDecision: 'deny',
+          permissionDecisionReason: `Error al parsear input de herramienta. Bloqueo por seguridad: ${e.message}`
+        }
+      });
+      console.log(message);
+      process.exit(2);
     }
   });
 }

@@ -1,11 +1,11 @@
 // session-handoff.js - Asks user if handoff should be created
-// Returns permissionDecision: "ask" to prompt user
+// Uses the 'confirm' action block per v1 schema
 
 function main() {
   const message = JSON.stringify({
-    hookSpecificOutput: {
-      permissionDecision: 'ask',
-      permissionDecisionReason: '¿Crear handoff desde la plantilla? (docs/coordination/handoffs/_TEMPLATE.md)'
+    confirm: {
+      title: '¿Crear handoff?',
+      message: '¿Desea crear el handoff desde la plantilla? (docs/coordination/handoffs/_TEMPLATE.md)'
     }
   });
   console.log(message);
