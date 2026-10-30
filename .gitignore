@@ -5,3 +5,4 @@ coverage/
 .env.*
 !.env.example
 docs/coordination/locks/*.lock
+.kiro/tmp

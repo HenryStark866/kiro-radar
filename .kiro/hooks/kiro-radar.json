@@ -1,0 +1,62 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "scope-guard",
+      "trigger": "PreToolUse",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/scope-guard.js"
+      }
+    },
+    {
+      "name": "secret-guard",
+      "trigger": "PreToolUse",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/secret-guard.js"
+      }
+    },
+    {
+      "name": "evidence-ledger",
+      "trigger": "PostTaskExec",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/evidence-ledger.js"
+      }
+    },
+    {
+      "name": "test-on-save",
+      "trigger": "PostFileSave",
+      "matcher": "packages/.*",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/test-on-save.js"
+      }
+    },
+    {
+      "name": "spec-sync",
+      "trigger": "PostFileCreate",
+      "matcher": "packages/.*",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/spec-sync.js"
+      }
+    },
+    {
+      "name": "session-handoff",
+      "trigger": "Stop",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/session-handoff.js"
+      },
+      "confirm": {
+        "question": "¿Crear handoff?",
+        "options": [
+          { "id": "yes", "label": "Sí, crear handoff", "run": true },
+          { "id": "no", "label": "No, omitir", "run": false }
+        ]
+      }
+    }
+  ]
+}
