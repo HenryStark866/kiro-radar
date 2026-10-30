@@ -63,3 +63,6 @@ Formato: `AAAA-MM-DD | agente | WP | qué pasó`. Solo agregar al final.
 - 2026-10-30 | Claude Code | WP-02 | Henry ordenó en el chat: entrega simple, funcional e ingeniosa en menos de 60 minutos. Alcance recortado a core + CLI (sin MCP, Power, workflow ni dashboard). Se toma como aprobación de G3 con ese recorte. Pruebas con node:test + fast-check, TS ejecutado directo en Node 24.
 - 2026-10-30 | Claude Code | WP-02 | Kiro CLI generó packages/core, packages/cli, fixtures y README. 22/22 pruebas. excellent 93, minimal 28, trap 0, autoescaneo 62. Revisión en docs/reviews/WP-02-core-2026-10-30.md (C1-C4 corregidos por Kiro).
 - 2026-10-30 | Claude Code | WP-02 | Henry aprobó en el chat fusionar WP-02 a main y subirlo.
+- 2026-10-30 | Claude Code | WP-04/06 | Henry aprobó en el chat agregar servidor MCP y Power antes de publicar. Rama wp/WP-04.
+- 2026-10-30 | Claude Code | WP-04/06 | Kiro generó servidor MCP (packages/mcp), .kiro/settings/mcp.json y power/kiro-radar (plugin.json, mcp.json, skill, README). 29/29 pruebas, autoescaneo 72. M1-M4 corregidos. M5 y M6 abiertos: Kiro llegó al límite mensual de créditos.
+- 2026-10-30 | Claude Code | WP-04/06 | Henry aprobó en el chat fusionar WP-04 (MCP y Power) a main y subirlo.

@@ -1,0 +1,8 @@
+{
+  "name": "kiro-radar",
+  "version": "0.1.0",
+  "description": "Escanea cualquier repositorio y te dice qué tan bien usa Kiro en 10 dimensiones, con puntuación 0-100 y las próximas jugadas para mejorar.",
+  "author": "Henry Taborda",
+  "keywords": ["kiro", "radar", "mcp", "scanner", "metrics"],
+  "homepage": "https://github.com/HenryStark866/kiro-radar"
+}

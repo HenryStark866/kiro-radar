@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "kiro-radar": {
+      "command": "npx",
+      "args": ["-y", "-p", "github:HenryStark866/kiro-radar", "kiro-radar-mcp"]
+    }
+  }
+}
