@@ -56,3 +56,4 @@ Formato: `AAAA-MM-DD | agente | WP | qué pasó`. Solo agregar al final.
 - 2026-10-30 | Kiro | WP-01 | Corrección de hooks tras revisión G1. 7 hallazgos corregidos: normalización de rutas, bloqueo si no se puede evaluar,matcher write, exclusión .kiro/specs/, bloque confirm en session-handoff, evidence-ledger con spec/tarea reales, TOOLS-MATRIX actualizado. Commits en wp/WP-01.
 - 2026-10-30 | Claude Code | WP-01 | Henry aprobó G1 en el chat.
 - 2026-10-30 | Claude Code | WP-01 | Henry aprobó fusionar WP-01 a main y subirlo.
+- 2026-10-30 | Claude Code | WP-02 | requirements.md de radar-core generado por Kiro y corregido tras revisión. Pendiente Analyze Requirements y G2 de Henry.
