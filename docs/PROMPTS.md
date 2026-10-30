@@ -27,7 +27,7 @@ Crea en .kiro/hooks/ estos hooks, con sus scripts Node en scripts/hooks/:
 2. secret-guard (PreToolUse sobre escritura): bloquea contenido con patrones de tokens y claves.
 3. evidence-ledger (PostTaskExec): agrega a docs/evidence/ledger.jsonl la fecha, el spec, la tarea y la rama.
 4. test-on-save (PostFileSave en packages/**): corre los tests del paquete afectado.
-5. spec-sync (PostFileCreate en packages/**, acción agent): pide confirmar que el archivo nuevo pertenece a una tarea del spec activo.
+5. spec-sync (PostFileCreate en packages/**, acción command): avisa si el archivo nuevo no aparece mencionado en el design.md o tasks.md del spec activo.
 6. session-handoff (Stop con confirm): pregunta si se crea el handoff desde la plantilla.
 
 Crea también .kiroignore para que no se lean node_modules, dist, coverage ni .env.

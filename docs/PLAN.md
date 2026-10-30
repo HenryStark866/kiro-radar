@@ -20,6 +20,17 @@ El reto premia usar muchas herramientas de Kiro **de forma significativa**. La m
 | `packages/web` | Dashboard estático: radar SVG a partir de un `report.json` |
 | `power/kiro-radar` | Power instalable que empaqueta el MCP y una skill de mejora |
 
+## Ajuste por plan Kiro Free
+
+Henry usa Kiro Free: 50 créditos, con reinicio el 2026-11-01. Eso manda sobre el resto del plan. La ejecución detallada está en `docs/PASO-A-PASO.md`.
+
+- **Prioridad:** spec aprobado, núcleo, CLI, MCP y Power. El dashboard y el despliegue solo se hacen si sobran créditos.
+- **Modelo:** el más barato disponible para escribir código; se sube de modelo solo si falla.
+- **Ejecución:** una tarea por vez. Nada de Run all en este plan.
+- **Hooks:** solo acciones `command`, que no gastan créditos. Las acciones `agent` quedan fuera.
+- **Revisión:** la hacen agentes externos con R1, sin gastar créditos de Kiro.
+- **Workflows, Correctness y Power de seguridad:** una sola corrida, al final, sobre un alcance pequeño.
+
 ## Las 10 dimensiones
 
 Cada una vale de 0 a 10, para un total de 100. Presencia sola nunca da la nota máxima.

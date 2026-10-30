@@ -17,6 +17,8 @@ Estados: `bloqueado`, `libre`, `en curso`, `en revisión`, `hecho`.
 | WP-08 | Despliegue | Configuración de hosting | WP-05, WP-07 | P11 | bloqueado |
 | WP-09 | README, demo, post y autoescaneo final | `README.md`, `docs/evidence/`, `docs/post/` | WP-06, WP-07, WP-08 | P12 | bloqueado |
 
+Con Kiro Free, WP-05 y WP-08 son opcionales y solo se abren si sobran créditos. WP-09 entonces depende solo de WP-06 y WP-07.
+
 ## Paralelismo
 
 Con WP-02 aprobado, WP-03, WP-04 y WP-05 pueden correr a la vez porque no comparten rutas. Los demás van en orden.
