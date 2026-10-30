@@ -90,10 +90,13 @@ function normalizePath(filePath, rootDir) {
   return normalized;
 }
 
-function isPathExcluded(normalizedPath) {
-  // Exclusion: .kiro/specs/ must never be written
+function isPathExcluded(normalizedPath, exclusivePaths) {
+  // normalizedPath empieza por .kiro/specs/ y ninguna ruta de exclusivePaths empieza por .kiro/specs/
   if (normalizedPath.startsWith('.kiro/specs/')) {
-    return true;
+    const hasSpecsInExclusive = exclusivePaths.some(p => p.startsWith('.kiro/specs/'));
+    if (!hasSpecsInExclusive) {
+      return true;
+    }
   }
   return false;
 }
@@ -126,7 +129,7 @@ function isWriteAllowed(normalizedPath, exclusivePaths, rootDir) {
 
       if (normalizedPath.toLowerCase().startsWith(patternLower) || patternLower === 'raíz') {
         // Additional check: ensure it's not excluded
-        if (!isPathExcluded(normalizedPath)) {
+        if (!isPathExcluded(normalizedPath, exclusivePaths)) {
           return true;
         }
       }
@@ -201,8 +204,8 @@ function main() {
         process.exit(2);
       }
 
-      // Special case: .kiro/specs/ is always excluded
-      if (isPathExcluded(normalizedPath)) {
+      // Special case: .kiro/specs/ is always excluded unless exclusivePaths allows it
+      if (isPathExcluded(normalizedPath, exclusivePaths)) {
         const message = JSON.stringify({
           hookSpecificOutput: {
             permissionDecision: 'deny',
