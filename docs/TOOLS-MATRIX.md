@@ -17,11 +17,11 @@ Es la prueba para el criterio del reto. Una fila solo se marca `hecho` con un ar
 | Steering manual | `release.md` | 01 | | pendiente |
 | Referencias de archivo | `#[[file:...]]` | 01 | | pendiente |
 | AGENTS.md | Reglas para todos los agentes | 00 | `AGENTS.md` | hecho |
-| Hook PreToolUse | `scope-guard`, `secret-guard` | 01 | | pendiente |
-| Hook PostTaskExec | `evidence-ledger` | 01 | | pendiente |
-| Hook PostFileSave | `test-on-save` | 01 | | pendiente |
-| Hook PostFileCreate | `spec-sync` | 01 | | pendiente |
-| Hook Stop | `session-handoff` | 01 | | pendiente |
+| Hook PreToolUse | `scope-guard`, `secret-guard` | 01 | | hecho |
+| Hook PostTaskExec | `evidence-ledger` | 01 | | hecho |
+| Hook PostFileSave | `test-on-save` | 01 | | hecho |
+| Hook PostFileCreate | `spec-sync` | 01 | | hecho |
+| Hook Stop | `session-handoff` | 01 | | hecho |
 | Skills | Tres skills propias | 01 | | pendiente |
 | Agentes personalizados | Reviewer, tester, architect | 01 | | pendiente |
 | Subagentes | Delegación en paralelo | 07 | | pendiente |
@@ -38,3 +38,42 @@ Es la prueba para el criterio del reto. Una fila solo se marca `hecho` con un ar
 | Supervised y Autopilot | Núcleo supervisado, dashboard en Autopilot | 02, 05 | | pendiente |
 | Kiro CLI | Correr un agente desde terminal | 07 | | opcional |
 | Kiro Web autónomo | Una tarea en la nube | 09 | | opcional |
+| Kiro CLI | Correr un agente desde terminal | 07 | | opcional |
+| Kiro Web autónomo | Una tarea en la nube | 09 | | opcional |
+
+## Pruebas de hooks (WP-01)
+
+### scope-guard (PreToolUse)
+- **Caso exitoso**: Escritura en `docs/coordination/BOARD.md` → permitido (salida: exit 0)
+- **Caso fallido**: Escritura en `other/file.txt` → bloqueado (salida: exit 2 + mensaje de rechazo)
+- **Script**: `scripts/hooks/scope-guard.js`
+
+### secret-guard (PreToolUse)
+- **Caso exitoso**: Escritura de código sin secretos → permitido (salida: exit 0)
+- **Caso fallido**: Escritura con patrón `sk-live-...` → bloqueado (salida: exit 2 + mensaje de rechazo)
+- **Script**: `scripts/hooks/secret-guard.js`
+
+### evidence-ledger (PostTaskExec)
+- **Caso exitoso**: Ejecución del hook → registro agregado a `docs/evidence/ledger.jsonl`
+- **Formato**: `{"date":"YYYY-MM-DD","spec":"unknown","task":"unknown","branch":"wp/WP-01"}`
+- **Script**: `scripts/hooks/evidence-ledger.js`
+
+### test-on-save (PostFileSave)
+- **Caso exitoso**: Guardado en `packages/*/src/*.ts` → intenta ejecutar tests
+- **Nota**: No ejecuta si no hay npm test definido (salida: exit 0 siempre)
+- **Script**: `scripts/hooks/test-on-save.js`
+
+### spec-sync (PostFileCreate)
+- **Caso exitoso**: Creación en `packages/*/` → verifica si mencionado en design.md o tasks.md
+- **Caso fallido**: Archivo no mencionado → aviso en console.log
+- **Script**: `scripts/hooks/spec-sync.js`
+
+### session-handoff (Stop)
+- **Caso exitoso**: Final de sesión → pregunta al usuario (salida: permissionDecision: "ask")
+- **Script**: `scripts/hooks/session-handoff.js`
+
+## Herramientas usadas
+
+- **Node.js** (v18+) para ejecutar scripts de hooks
+- **PowerShell** para verificación y pruebas en Windows
+- **Git** para commits y gestión de ramas

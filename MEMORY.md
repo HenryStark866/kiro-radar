@@ -50,3 +50,4 @@ Formato: `AAAA-MM-DD | agente | WP | qué pasó`. Solo agregar al final.
 - 2026-10-30 | Claude Code | WP-00 | Henry aprobó Kiro Radar en el chat. Sigue la fase 0.
 - 2026-10-30 | Claude Code | WP-00 | Henry aprobó en el chat crear el repositorio público. Creado y publicado en GitHub.
 - 2026-10-30 | Claude Code | WP-00 | Plan ajustado a Kiro Free y creado docs/PASO-A-PASO.md. Dashboard y despliegue pasan a opcionales.
+- 2026-10-30 | Kiro | WP-00 | Henry aprobó G0. WP-00 completo. WP-01 en curso.
