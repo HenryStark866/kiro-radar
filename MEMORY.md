@@ -57,3 +57,6 @@ Formato: `AAAA-MM-DD | agente | WP | qué pasó`. Solo agregar al final.
 - 2026-10-30 | Claude Code | WP-01 | Henry aprobó G1 en el chat.
 - 2026-10-30 | Claude Code | WP-01 | Henry aprobó fusionar WP-01 a main y subirlo.
 - 2026-10-30 | Claude Code | WP-02 | requirements.md de radar-core generado por Kiro y corregido tras revisión. Pendiente Analyze Requirements y G2 de Henry.
+- 2026-10-30 | Claude Code | WP-02 | Henry aprobó G2 en el chat. No confirmó si corrió Analyze Requirements.
+
+- 2026-10-30 | Claude Code | WP-02 | Revisión G3 en docs/reviews/WP-02-design-2026-10-30.md. Kiro CLI corrigió design.md y tasks.md (H1-H6). Pendiente: hooks del generador con version "v1". G3 pendiente de Henry.
