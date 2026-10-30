@@ -17,7 +17,7 @@ Es la prueba para el criterio del reto. Una fila solo se marca `hecho` con un ar
 | Steering manual | `release.md` | 01 | | pendiente |
 | Referencias de archivo | `#[[file:...]]` | 01 | | pendiente |
 | AGENTS.md | Reglas para todos los agentes | 00 | `AGENTS.md` | hecho |
-| Hook PreToolUse | `scope-guard`, `secret-guard` | 01 | [kiro:wp-01] add hooks configuration | hecho |
+| Hook PreToolUse | `scope-guard`, `secret-guard` | 01 | bloqueo real de packages/guard-test.txt mas scripts/hooks/hooks.test.js con 26 casos | hecho |
 | Hook PostTaskExec | `evidence-ledger` | 01 | [kiro:wp-01] add hooks configuration | hecho |
 | Hook PostFileSave | `test-on-save` | 01 | [kiro:wp-01] add hooks configuration | hecho |
 | Hook PostFileCreate | `spec-sync` | 01 | [kiro:wp-01] add hooks configuration | hecho |
@@ -36,7 +36,7 @@ Es la prueba para el criterio del reto. Una fila solo se marca `hecho` con un ar
 | Memory | Decisiones entre sesiones | 00 | | pendiente |
 | Checkpoints | Una reversión real, si ocurre | 03 | | pendiente |
 | Supervised y Autopilot | Núcleo supervisado, dashboard en Autopilot | 02, 05 | | pendiente |
-| Kiro CLI | Correr un agente desde terminal | 07 | | opcional |
+| Kiro CLI | Correr un agente desde terminal | 07 | bloqueo real de scope-guard con kiro-cli chat --v3 el 2026-10-30 | hecho |
 | Kiro Web autónomo | Una tarea en la nube | 09 | | opcional |
 
 ## Pruebas de hooks (WP-01)
@@ -75,6 +75,9 @@ Es la prueba para el criterio del reto. Una fila solo se marca `hecho` con un ar
 - **Caso exitoso**: Final de sesión → pregunta al usuario (bloque `confirm`)
 - **Script**: `scripts/hooks/session-handoff.js`
 - **Reproducción**: `echo '{}' | node scripts/hooks/session-handoff.js`
+
+#### Nota importante sobre el matcher write y IDs (CLI 2.36.0 v3)
+el matcher write y la lista de IDs no activaron el hook en CLI 2.36.0 v3; por eso el hook no usa matcher y filtra tool_name en el script. La guardia no cubre escrituras por shell (execute_pwsh), que requieren aprobacion manual.
 
 ## Herramientas usadas
 

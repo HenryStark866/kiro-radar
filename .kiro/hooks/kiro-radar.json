@@ -4,7 +4,6 @@
     {
       "name": "scope-guard",
       "trigger": "PreToolUse",
-      "matcher": "write",
       "action": {
         "type": "command",
         "command": "node scripts/hooks/scope-guard.js"
@@ -13,7 +12,6 @@
     {
       "name": "secret-guard",
       "trigger": "PreToolUse",
-      "matcher": "write",
       "action": {
         "type": "command",
         "command": "node scripts/hooks/secret-guard.js"

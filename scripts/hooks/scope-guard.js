@@ -4,6 +4,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const ALLOWED_TOOLS = ['fs_write', 'fs_append', 'str_replace', 'delete_file'];
+
 function getActiveWP() {
   const locksDir = path.join(__dirname, '..', '..', 'docs', 'coordination', 'locks');
   try {
@@ -163,10 +165,14 @@ function main() {
     try {
       const input = JSON.parse(toolInput);
 
+      if (input.tool_name && !ALLOWED_TOOLS.includes(input.tool_name)) {
+        console.error(`Herramienta no permitida: ${input.tool_name}`);
+        process.exit(0);
+      }
+
       const filePath = extractFilePath(input);
 
       if (!filePath) {
-        // Cannot determine file, block
         const message = JSON.stringify({
           hookSpecificOutput: {
             permissionDecision: 'deny',
@@ -174,6 +180,7 @@ function main() {
           }
         });
         console.log(message);
+        console.error('Bloqueo: No se pudo determinar la ruta de escritura.');
         process.exit(2);
       }
 
@@ -190,6 +197,7 @@ function main() {
           }
         });
         console.log(message);
+        console.error('Bloqueo: Escritura fuera de alcance - detección de traversal.');
         process.exit(2);
       }
 
@@ -202,6 +210,7 @@ function main() {
           }
         });
         console.log(message);
+        console.error('Bloqueo: Escritura en ruta excluida: .kiro/specs/.');
         process.exit(2);
       }
 
@@ -215,10 +224,10 @@ function main() {
           }
         });
         console.log(message);
+        console.error(`Bloqueo: Escritura fuera de alcance - WP: ${activeWP || 'ninguno'}, Ruta: ${normalizedPath}`);
         process.exit(2);
       }
     } catch (e) {
-      // Error parsing, block
       const message = JSON.stringify({
         hookSpecificOutput: {
           permissionDecision: 'deny',
@@ -226,6 +235,7 @@ function main() {
         }
       });
       console.log(message);
+      console.error(`Bloqueo: Error al parsear input de herramienta - ${e.message}`);
       process.exit(2);
     }
   });

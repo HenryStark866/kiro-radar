@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const ALLOWED_TOOLS = ['fs_write', 'fs_append', 'str_replace', 'delete_file'];
 const SECRET_PATTERNS = [
   /api[_-]?key\s*[=:]\s*['"][a-zA-Z0-9]{20,}['"]/gi,
   /secret\s*[=:]\s*['"][^'"]+['"]/gi,
@@ -55,6 +56,11 @@ function main() {
     try {
       const input = JSON.parse(toolInput);
 
+      if (input.tool_name && !ALLOWED_TOOLS.includes(input.tool_name)) {
+        console.error(`Herramienta no permitida: ${input.tool_name}`);
+        process.exit(0);
+      }
+
       const fileContent = extractFileContent(input);
 
       // If content cannot be determined, block
@@ -66,6 +72,7 @@ function main() {
           }
         });
         console.log(message);
+        console.error('Bloqueo: No se pudo determinar el contenido de escritura.');
         process.exit(2);
       }
 
@@ -77,12 +84,12 @@ function main() {
           }
         });
         console.log(message);
+        console.error('Bloqueo: Posibles secretos o tokens detectados.');
         process.exit(2);
       }
 
       process.exit(0);
     } catch (e) {
-      // Error parsing, block
       const message = JSON.stringify({
         hookSpecificOutput: {
           permissionDecision: 'deny',
@@ -90,6 +97,7 @@ function main() {
         }
       });
       console.log(message);
+      console.error(`Bloqueo: Error al parsear input de herramienta - ${e.message}`);
       process.exit(2);
     }
   });
