@@ -70,7 +70,7 @@ function main() {
       const normalizedFilePath = normalizePath(filePath);
       const relPath = normalizePath(path.relative(rootDir, normalizedFilePath));
 
-      if (!relPath.startsWith('packages/')) {
+      if (!relPath.replace(/\\/g, '/').startsWith('packages/')) {
         process.exit(0);
       }
 

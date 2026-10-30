@@ -34,8 +34,8 @@ function main() {
 
   process.stdin.on('end', () => {
     try {
-      const rootDir = path.join(__dirname, '..', '..');
-      const ledgerPath = path.join(rootDir, 'docs', 'evidence', 'ledger.jsonl');
+      // Use KIRO_RADAR_LEDGER env var if set, otherwise default to docs/evidence/ledger.jsonl
+      const ledgerPath = process.env.KIRO_RADAR_LEDGER || path.join(__dirname, '..', '..', 'docs', 'evidence', 'ledger.jsonl');
 
       let spec = 'unknown';
       let task = 'unknown';

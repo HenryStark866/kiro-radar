@@ -36,16 +36,16 @@ function getExclusivePaths(boardPath, wpId) {
 
       const parts = line.split('|');
       if (parts.length >= 6) {
-        const wpField = parts[0].trim();
+        const wpField = parts[1].trim();
         if (wpField === wpId) {
           const pathsPart = parts[3].trim();
-          // Remove backticks and parentheses, split by comma
+          // Remove backticks and parentheses, split by comma, keep only first token per path
           const cleanPaths = pathsPart
             .replace(/`/g, '')
             .replace(/\(/g, '')
             .replace(/\)/g, '')
             .split(',')
-            .map(p => p.trim());
+            .map(p => p.trim().split(' ')[0]);
           return cleanPaths;
         }
       }
@@ -57,20 +57,32 @@ function getExclusivePaths(boardPath, wpId) {
 }
 
 function normalizePath(filePath, rootDir) {
-  // Normalize Windows backslashes to forward slashes
-  let normalized = filePath.replace(/\\/g, '/');
+  // Resolve the path first to prevent traversal attacks like ../../packages/x.ts
+  const resolvedPath = path.resolve(filePath);
 
-  // Normalize rootDir for comparison
-  const rootDirNormalized = rootDir.replace(/\\/g, '/');
+  // Normalize Windows backslashes to forward slashes
+  let normalized = resolvedPath.replace(/\\/g, '/');
+
+  // Normalize rootDir for comparison (case-insensitive for Windows)
+  const rootDirNormalized = rootDir.replace(/\\/g, '/').toLowerCase();
+
+  // Resolve rootDir to absolute and lowercase for consistent comparison
+  const rootDirAbsolute = path.resolve(rootDir).replace(/\\/g, '/').toLowerCase();
 
   // Make relative to root
-  if (normalized.startsWith(rootDirNormalized)) {
-    normalized = normalized.substring(rootDirNormalized.length);
+  if (normalized.toLowerCase().startsWith(rootDirAbsolute)) {
+    normalized = normalized.substring(rootDirAbsolute.length);
   }
 
   // Remove leading slash if present
   if (normalized.startsWith('/')) {
     normalized = normalized.substring(1);
+  }
+
+  // Block any path that resolves outside root (after normalization)
+  // If normalized path contains .. it means it escaped the root
+  if (normalized.includes('..')) {
+    return null; // Block traversal
   }
 
   return normalized;
@@ -85,6 +97,11 @@ function isPathExcluded(normalizedPath) {
 }
 
 function isWriteAllowed(normalizedPath, exclusivePaths, rootDir) {
+  // Block if normalizedPath is null (traversal detected)
+  if (normalizedPath === null) {
+    return false;
+  }
+
   // Always allow these paths
   const allowedPatterns = [
     'docs/coordination/',
@@ -94,7 +111,7 @@ function isWriteAllowed(normalizedPath, exclusivePaths, rootDir) {
   ];
 
   for (const pattern of allowedPatterns) {
-    if (normalizedPath.startsWith(pattern)) {
+    if (normalizedPath.toLowerCase().startsWith(pattern.toLowerCase())) {
       return true;
     }
   }
@@ -102,10 +119,10 @@ function isWriteAllowed(normalizedPath, exclusivePaths, rootDir) {
   // Check if write is in the active WP's exclusive paths
   if (exclusivePaths.length > 0) {
     for (const exclusivePath of exclusivePaths) {
-      // Remove leading dot and slash for comparison
-      const cleanExclusive = exclusivePath.replace(/^\./, '').replace(/^\//, '');
+      // Normalize pattern to lowercase for comparison
+      const patternLower = exclusivePath.toLowerCase();
 
-      if (normalizedPath.startsWith(cleanExclusive) || cleanExclusive === 'raíz') {
+      if (normalizedPath.toLowerCase().startsWith(patternLower) || patternLower === 'raíz') {
         // Additional check: ensure it's not excluded
         if (!isPathExcluded(normalizedPath)) {
           return true;
@@ -163,6 +180,18 @@ function main() {
       const normalizedPath = normalizePath(filePath, rootDir);
       const activeWP = getActiveWP();
       const exclusivePaths = activeWP ? getExclusivePaths(boardPath, activeWP) : [];
+
+      // Block if path traversal was detected (normalizedPath is null)
+      if (normalizedPath === null) {
+        const message = JSON.stringify({
+          hookSpecificOutput: {
+            permissionDecision: 'deny',
+            permissionDecisionReason: `Escritura fuera de alcance. Ruta: ${filePath}. Bloqueo por detección de traversal.`
+          }
+        });
+        console.log(message);
+        process.exit(2);
+      }
 
       // Special case: .kiro/specs/ is always excluded
       if (isPathExcluded(normalizedPath)) {

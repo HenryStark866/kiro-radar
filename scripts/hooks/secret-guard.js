@@ -9,7 +9,7 @@ const SECRET_PATTERNS = [
   /secret\s*[=:]\s*['"][^'"]+['"]/gi,
   /password\s*[=:]\s*['"][^'"]+['"]/gi,
   /token\s*[=:]\s*['"][a-zA-Z0-9_\-]{16,}['"]/gi,
-  /AWS[_-]?ACCESS[_-]?KEY[_-]?ID\s*[=:]\s*['"]AKIA/i,
+  /AKIA[A-Z0-9]{16}/i,
   /AWS[_-]?SECRET[_-]?ACCESS[_-]?KEY\s*[=:]\s*['"][^'"]{20,}['"]/gi,
   /ghp_[a-zA-Z0-9]{36}/,
   /gho_[a-zA-Z0-9]{36}/,

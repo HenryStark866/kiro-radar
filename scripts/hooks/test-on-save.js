@@ -38,7 +38,7 @@ function main() {
       const relPath = normalizePath(path.relative(rootDir, filePath));
 
       // Check if starts with packages/ (now works on Windows)
-      if (!relPath.startsWith('packages/')) {
+      if (!relPath.replace(/\\/g, '/').startsWith('packages/')) {
         process.exit(0);
       }
 

@@ -1,10 +1,12 @@
 // hooks.test.js - Test cases for hooks
 // Usage: node scripts/hooks/hooks.test.js <hook_name>
 
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
 
-const rootDir = path.join(__dirname, '..');
+const rootDir = path.join(__dirname, '..', '..');
 const rootDirWindows = rootDir.replace(/\\/g, '/');
 const docsCoordination = path.join(rootDir, 'docs', 'coordination').replace(/\\/g, '/');
 
@@ -42,13 +44,28 @@ const testCases = {
       expected: 'exit 2'
     },
     {
-      name: 'allowed: raíz (WP-01 exclusive)',
+      name: 'denied: README.md fuera de WP-01',
       input: JSON.stringify({ params: { path: path.join(rootDir, 'README.md') } }),
-      expected: 'exit 0'
+      expected: 'exit 2'
     },
     {
       name: 'denied: path cannot be determined',
       input: JSON.stringify({ otherKey: 'value' }),
+      expected: 'exit 2'
+    },
+    {
+      name: 'denied: traversal blocked (../../packages/x.ts)',
+      input: JSON.stringify({ params: { path: path.join(rootDir, 'scripts', 'hooks', '..', '..', 'packages', 'x.ts').replace(/\\/g, '/') } }),
+      expected: 'exit 2'
+    },
+    {
+      name: 'allowed: lowercase c: with path.join normalization',
+      input: JSON.stringify({ params: { path: path.join(rootDir, 'scripts', 'hooks', 'x.js').toLowerCase().replace(/^[A-Z]:/, m => m.toLowerCase()).replace(/\\/g, '/') } }),
+      expected: 'exit 0'
+    },
+    {
+      name: 'denied: scripts/hooks-evil directory blocked',
+      input: JSON.stringify({ params: { path: path.join(rootDir, 'scripts', 'hooks-evil', 'test.js').replace(/\\/g, '/') } }),
       expected: 'exit 2'
     }
   ],
@@ -98,8 +115,8 @@ const testCases = {
   ],
   'test-on-save': [
     {
-      name: 'allowed: packages/core file (Windows path)',
-      input: JSON.stringify({ params: { path: path.join(rootDir, 'packages/core/src/index.ts').replace(/\\/g, '/') } }),
+      name: 'allowed: packages/core file with Windows path (normalized)',
+      input: JSON.stringify({ params: { path: path.join(rootDir, 'packages\\core\\src\\index.ts').replace(/\//g, '\\') } }),
       expected: 'exit 0'
     },
     {
@@ -115,8 +132,8 @@ const testCases = {
   ],
   'spec-sync': [
     {
-      name: 'allowed: packages/core file',
-      input: JSON.stringify({ params: { path: path.join(rootDir, 'packages/core/src/index.ts').replace(/\\/g, '/') } }),
+      name: 'allowed: packages/core file with Windows path (normalized)',
+      input: JSON.stringify({ params: { path: path.join(rootDir, 'packages\\core\\src\\index.ts').replace(/\//g, '\\') } }),
       expected: 'exit 0'
     },
     {
@@ -132,32 +149,42 @@ const testCases = {
   ],
   'session-handoff': [
     {
-      name: 'allowed: empty input',
+      name: 'allowed: empty input with KIRO_RADAR_ROOT',
       input: JSON.stringify({}),
-      expected: 'exit 0 with confirm block'
+      expected: 'exit 0',
+      env: { KIRO_RADAR_ROOT: path.join(rootDir, 'tests', 'tmp', 'session-handoff-test') }
     }
   ]
 };
 
-function runHook(hookName, input) {
+function runHook(hookName, input, env = {}) {
   const scriptPath = path.join(rootDir, 'scripts', 'hooks', `${hookName}.js`);
   try {
-    // Use PowerShell to pass stdin
-    const command = `echo '${input.replace(/'/g, "''")}' | node "${scriptPath}"`;
-    const output = execSync(command, {
+    // Use spawnSync with stdin input (no shell)
+    const result = spawnSync('node', [scriptPath], {
       encoding: 'utf8',
+      input: input,
       stdio: ['pipe', 'pipe', 'pipe'],
-      shell: 'powershell'
+      env: { ...process.env, ...env }
     });
-    return { output, exitCode: 0 };
+
+    // Return the actual exit code from the process
+    return { 
+      output: result.stdout || '', 
+      exitCode: result.status !== null ? result.status : (result.signal === 'SIGTERM' ? 143 : 1) 
+    };
   } catch (e) {
-    return { output: e.stdout || '', exitCode: e.exitCode || 1 };
+    return { output: e.stdout || '', exitCode: e.status || 1 };
   }
 }
 
 function runAllTests() {
   let passed = 0;
   let failed = 0;
+
+  // Create a temporary file for evidence ledger tests
+  const tempLedger = path.join(os.tmpdir(), `kiro-ledger-test-${Date.now()}.jsonl`);
+  process.env.KIRO_RADAR_LEDGER = tempLedger;
 
   console.log('=== Hooks Test Suite ===\n');
 
@@ -169,23 +196,48 @@ function runAllTests() {
       const success = (exitCode === 0 && testCase.expected.includes('exit 0')) ||
         (exitCode === 2 && testCase.expected.includes('exit 2')) ||
         (hookName === 'session-handoff' && output.includes('confirm'));
+      
+      // Extra check for session-handoff test case
+      if (hookName === 'session-handoff' && testCase.name.includes('KIRO_RADAR_ROOT')) {
+        // session-handoff should not print confirm, should exit 0
+        const hasNoConfirm = !output.includes('confirm');
+        const correctExit = exitCode === 0;
+        const successOutput = hasNoConfirm && correctExit;
+        if (successOutput) {
+          console.log(`  ✓ ${testCase.name}`);
+          passed++;
+        } else {
+          console.log(`  ✗ ${testCase.name} (expected: ${testCase.expected}, got exit: ${exitCode})`);
+          console.log(`    Output: ${output.substring(0, 200)}`);
+          failed++;
+        }
+        continue;
+      }
 
-      if (success) {
-        console.log(`  ✓ ${testCase.name}`);
-        passed++;
-      } else {
-        console.log(`  ✗ ${testCase.name} (expected: ${testCase.expected}, got exit: ${exitCode})`);
-        console.log(`    Output: ${output.substring(0, 200)}`);
-        failed++;
+      if (!testCase.name.includes('KIRO_RADAR_ROOT')) {
+        if (success) {
+          console.log(`  ✓ ${testCase.name}`);
+          passed++;
+        } else {
+          console.log(`  ✗ ${testCase.name} (expected: ${testCase.expected}, got exit: ${exitCode})`);
+          console.log(`    Output: ${output.substring(0, 200)}`);
+          failed++;
+        }
       }
     }
   }
 
   console.log(`\n=== Results: ${passed} passed, ${failed} failed ===`);
+  
+  // Cleanup temp ledger file if it exists
+  if (fs.existsSync(tempLedger)) {
+    fs.unlinkSync(tempLedger);
+  }
+  
   process.exit(failed > 0 ? 1 : 0);
 }
 
-function runSingleTest(hookName, testCaseIndex) {
+function runSingleTest(hookName, testCaseIndex, env = {}) {
   const cases = testCases[hookName];
   if (!cases) {
     console.log(`Unknown hook: ${hookName}`);
@@ -199,11 +251,25 @@ function runSingleTest(hookName, testCaseIndex) {
   }
 
   console.log(`\nTesting: ${testCase.name}`);
-  const { output, exitCode } = runHook(hookName, testCase.input);
+  const testEnv = testCase.env || {};
+  const { output, exitCode } = runHook(hookName, testCase.input, testEnv);
 
   const success = (exitCode === 0 && testCase.expected.includes('exit 0')) ||
     (exitCode === 2 && testCase.expected.includes('exit 2')) ||
     (hookName === 'session-handoff' && output.includes('confirm'));
+  
+  if (hookName === 'session-handoff' && testCase.name.includes('KIRO_RADAR_ROOT')) {
+    const hasNoConfirm = !output.includes('confirm');
+    const correctExit = exitCode === 0;
+    const successOutput = hasNoConfirm && correctExit;
+    if (successOutput) {
+      console.log(`  ✓ PASSED`);
+    } else {
+      console.log(`  ✗ FAILED (expected: ${testCase.expected}, got exit: ${exitCode})`);
+      console.log(`    Output: ${output.substring(0, 200)}`);
+    }
+    process.exit(successOutput ? 0 : 1);
+  }
 
   if (success) {
     console.log(`  ✓ PASSED`);

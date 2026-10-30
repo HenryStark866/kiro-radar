@@ -51,6 +51,13 @@
       "action": {
         "type": "command",
         "command": "node scripts/hooks/session-handoff.js"
+      },
+      "confirm": {
+        "question": "¿Crear handoff?",
+        "options": [
+          { "id": "yes", "label": "Sí, crear handoff", "run": true },
+          { "id": "no", "label": "No, omitir", "run": false }
+        ]
       }
     }
   ]
