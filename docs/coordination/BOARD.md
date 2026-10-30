@@ -8,7 +8,7 @@ Estados: `bloqueado`, `libre`, `en curso`, `en revisión`, `hecho`.
 | --- | --- | --- | --- | --- | --- |
 | WP-00 | Kiro instalado, git, repositorio remoto | raíz | Ninguno | Comandos de fase 0 | hecho |
 | WP-01 | Configuración de Kiro: hooks, skills, agentes, steering adicional | `.kiro/` (menos `specs/`), `.kiroignore`, `scripts/hooks/` | WP-00 | P1, P2 | hecho |
-| WP-02 | Spec y motor de puntaje | `.kiro/specs/radar-core/`, `packages/core/` | WP-01 | P3, P4 | libre |
+| WP-02 | Spec y motor de puntaje | `.kiro/specs/radar-core/`, `packages/core/` | WP-01 | P3, P4 | en curso |
 | WP-03 | CLI | `.kiro/specs/radar-cli/`, `packages/cli/` | WP-02 | P5 | bloqueado |
 | WP-04 | Servidor MCP | `.kiro/specs/radar-mcp/`, `packages/mcp/` | WP-02 | P6 | bloqueado |
 | WP-05 | Dashboard | `.kiro/specs/radar-web/`, `packages/web/` | WP-02 | P7 | bloqueado |
