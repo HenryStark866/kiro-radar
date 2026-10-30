@@ -5,8 +5,9 @@ Fuente de verdad del **estado**. Las reglas viven en `AGENTS.md`; el detalle del
 ## Estado actual
 
 - **Fase:** 0, preparación.
-- **Bloqueo:** Kiro no está instalado en el equipo de Henry (verificado el 2026-10-30). Tampoco existe repositorio git todavía.
-- **Siguiente paso:** ejecutar la fase 0 de `docs/PLAN.md`.
+- **Repositorio:** https://github.com/HenryStark866/kiro-radar (público, rama `main`).
+- **Bloqueo:** Kiro no está instalado en el equipo de Henry (verificado el 2026-10-30).
+- **Siguiente paso:** instalar Kiro, abrir el repositorio y pasar la compuerta G0 con el prompt P0.
 - **Fecha límite del reto:** desconocida. Henry debe confirmarla.
 - **Canal de entrega:** desconocido. Henry debe confirmarlo.
 
@@ -47,3 +48,4 @@ Formato: `AAAA-MM-DD | agente | WP | qué pasó`. Solo agregar al final.
 
 - 2026-10-30 | Claude Code | WP-00 | Creado el andamiaje de coordinación, el plan, los prompts y el steering inicial. Ningún archivo de código de producto.
 - 2026-10-30 | Claude Code | WP-00 | Henry aprobó Kiro Radar en el chat. Sigue la fase 0.
+- 2026-10-30 | Claude Code | WP-00 | Henry aprobó en el chat crear el repositorio público. Creado y publicado en GitHub.
