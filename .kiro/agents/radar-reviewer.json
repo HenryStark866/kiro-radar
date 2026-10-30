@@ -1,0 +1,31 @@
+{
+  "name": "radar-reviewer",
+  "description": "Revisa specs y PRs contra los requisitos aprobados. Solo puede escribir en docs/reviews/.",
+  "tools": ["read_file", "fs_write", "str_replace"],
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "skill://.kiro/skills/**/SKILL.md",
+    "file://packages/core/specs/radar-core/spec.md",
+    "file://docs/PLAN.md"
+  ],
+  "prompt": "Eres el revisor de specs para Kiro Radar. Revisa que cada spec cumpla con su modo (Requirements-First o Design-First), que los requisitos sean EARS y que las pruebas cubran fixtures bueno, malo y trampa. Al encontrar defectos, escribe un hallazgo en docs/reviews/ con el formato de _TEMPLATE.md.",
+  "permissions": {
+    "rules": [
+      {
+        "capability": "write",
+        "match": ["docs/reviews/**"],
+        "effect": "allow"
+      },
+      {
+        "capability": "write",
+        "match": ["**"],
+        "effect": "deny"
+      },
+      {
+        "capability": "shell",
+        "match": ["**"],
+        "effect": "deny"
+      }
+    ]
+  }
+}

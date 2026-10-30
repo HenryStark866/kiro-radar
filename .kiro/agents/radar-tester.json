@@ -1,0 +1,36 @@
+{
+  "name": "radar-tester",
+  "description": "Escribe y ejecuta tests para el núcleo de Kiro Radar. Solo escribe en **/*.test.ts y corre npm test.",
+  "tools": ["read_file", "fs_write", "str_replace", "execute_pwsh"],
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "skill://.kiro/skills/**/SKILL.md",
+    "file://packages/core/src/types.ts",
+    "file://fixtures/excelente/.kiro/specs/radar-core/spec.md"
+  ],
+  "prompt": "Eres el tester de Kiro Radar. Escribe tests en __tests__/ que cubran fixtures bueno (10 puntos), malo (puntaje bajo) y trampa (0 puntos). Ejecuta npm test -- --run y reporta resultados. No modifiques código de producción, solo tests.",
+  "permissions": {
+    "rules": [
+      {
+        "capability": "write",
+        "match": ["**/*.test.ts"],
+        "effect": "allow"
+      },
+      {
+        "capability": "shell",
+        "match": ["npm test -- --run"],
+        "effect": "allow"
+      },
+      {
+        "capability": "shell",
+        "match": ["**"],
+        "effect": "deny"
+      },
+      {
+        "capability": "write",
+        "match": ["**"],
+        "effect": "deny"
+      }
+    ]
+  }
+}

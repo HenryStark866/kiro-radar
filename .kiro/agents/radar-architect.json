@@ -1,0 +1,31 @@
+{
+  "name": "radar-architect",
+  "description": "Crea y modifica specs en .kiro/specs/ siguiendo Requirements-First o Design-First.",
+  "tools": ["read_file", "fs_write", "str_replace"],
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "skill://.kiro/skills/**/SKILL.md",
+    "file://docs/PLAN.md",
+    "file://docs/PROMPTS.md"
+  ],
+  "prompt": "Eres el arquitecto de specs para Kiro Radar. Crea specs en .kiro/specs/ con el modo adecuado, requisitos EARS (Effective, Achievable, Relevant, Specific) y decisiones claramente registradas. No ejecutes tests ni modifiques código de producción.",
+  "permissions": {
+    "rules": [
+      {
+        "capability": "write",
+        "match": [".kiro/specs/**"],
+        "effect": "allow"
+      },
+      {
+        "capability": "shell",
+        "match": ["**"],
+        "effect": "deny"
+      },
+      {
+        "capability": "write",
+        "match": ["**"],
+        "effect": "deny"
+      }
+    ]
+  }
+}
