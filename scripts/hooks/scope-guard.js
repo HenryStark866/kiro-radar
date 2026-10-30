@@ -6,8 +6,8 @@ const path = require('path');
 
 const ALLOWED_TOOLS = ['fs_write', 'fs_append', 'str_replace', 'delete_file'];
 
-function getActiveWP() {
-  const locksDir = path.join(__dirname, '..', '..', 'docs', 'coordination', 'locks');
+function getActiveWP(rootDir) {
+  const locksDir = path.join(rootDir, 'docs', 'coordination', 'locks');
   try {
     const files = fs.readdirSync(locksDir);
     for (const file of files) {
@@ -56,6 +56,10 @@ function getExclusivePaths(boardPath, wpId) {
     // Error reading BOARD.md
   }
   return [];
+}
+
+function getBoardPath(rootDir) {
+  return path.join(rootDir, 'docs', 'coordination', 'BOARD.md').split(path.sep).join('/');
 }
 
 function normalizePath(filePath, rootDir) {
@@ -157,8 +161,9 @@ function extractFilePath(input) {
 }
 
 function main() {
-  const rootDir = path.resolve(__dirname, '..', '..').split(path.sep).join('/');
-  const boardPath = path.join(rootDir, 'docs', 'coordination', 'BOARD.md').split(path.sep).join('/');
+  // Use KIRO_RADAR_ROOT if set, otherwise default to parent of scripts/hooks
+  const rootDir = process.env.KIRO_RADAR_ROOT || path.resolve(__dirname, '..', '..').split(path.sep).join('/');
+  const boardPath = getBoardPath(rootDir);
 
   // Read stdin for tool input
   let toolInput = '';
@@ -188,7 +193,7 @@ function main() {
       }
 
       const normalizedPath = normalizePath(filePath, rootDir);
-      const activeWP = getActiveWP();
+      const activeWP = getActiveWP(rootDir);
       const exclusivePaths = activeWP ? getExclusivePaths(boardPath, activeWP) : [];
 
       // Block if path traversal was detected (normalizedPath is null)
