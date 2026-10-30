@@ -1,0 +1,22 @@
+{
+  "name": "kiro-radar",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Mide qué tan bien un repositorio usa Kiro en 10 dimensiones.",
+  "bin": {
+    "kiro-radar": "packages/cli/bin.mjs"
+  },
+  "scripts": {
+    "test": "node --test \"packages/core/test/*.test.ts\"",
+    "scan": "node packages/cli/bin.mjs scan"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "fast-check": "^3.23.0"
+  },
+  "engines": {
+    "node": ">=22.18"
+  }
+}

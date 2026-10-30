@@ -1,0 +1,13 @@
+{
+  "name": "radar-architect",
+  "description": "Designs scoring dimensions and public types for Kiro Radar.",
+  "tools": ["read_file", "write_file", "search_files"],
+  "resources": ["packages/core/src/", ".kiro/specs/"],
+  "permissions": {
+    "rules": [
+      {"allow": "read", "path": "**"},
+      {"allow": "write", "path": "packages/core/src/**"},
+      {"deny": "write", "path": "packages/cli/**"}
+    ]
+  }
+}

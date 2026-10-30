@@ -1,0 +1,41 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "scope-guard",
+      "trigger": "PreToolUse",
+      "description": "Block writes outside allowed paths",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/scope-guard.js"
+      }
+    },
+    {
+      "name": "secret-guard",
+      "trigger": "UserPromptSubmit",
+      "description": "Check for secrets before any prompt",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/secret-guard.js"
+      }
+    },
+    {
+      "name": "evidence-ledger",
+      "trigger": "PostToolUse",
+      "description": "Log evidence after tool use",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/evidence-ledger.js"
+      }
+    },
+    {
+      "name": "spec-sync",
+      "trigger": "PreTaskExec",
+      "description": "Validate task is in scope before execution",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/spec-sync.js"
+      }
+    }
+  ]
+}
