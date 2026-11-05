@@ -1,0 +1,13 @@
+Lee AGENTS.md y MEMORY.md. Ya estas en la rama wp/WP-10-release (no cambies de rama, no hagas commit, no ejecutes git rebase ni nada interactivo). Solo escribe archivos; yo correre npm y las pruebas.
+
+Problema verificado: al instalar kiro-radar como paquete (npm pack + npm i del .tgz), `npx kiro-radar scan` falla con ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING, porque packages/cli/bin.mjs y packages/mcp/server.mjs importan archivos .ts (../core/src/index.ts, ./render.ts) y Node no quita tipos dentro de node_modules. Tambien afecta al Power.
+
+Tarea:
+1. Crea tsconfig.build.json en la raiz: module y moduleResolution "nodenext", target "es2022", rootDir "packages", outDir "dist", include packages/core/src/**/*.ts y packages/cli/render.ts, "allowImportingTsExtensions": true y "rewriteRelativeImportExtensions": true (los imports usan extension .ts y deben salir como .js), declaration false, sourceMap false, strict true, skipLibCheck true.
+2. En package.json raiz: agrega devDependency "typescript": "^5.8.0", script "build": "tsc -p tsconfig.build.json", "prepack": "npm run build" y "test:pack": "node --test \"tests/e2e/*.test.mjs\"". No quites nada existente.
+3. Haz que packages/cli/bin.mjs importe desde ../../dist/core/src/index.js y ../../dist/cli/render.js, y que packages/mcp/server.mjs importe desde ../../dist/core/src/index.js. No cambies otra logica de esos archivos.
+4. Agrega "files" a package.json raiz con exactamente: "dist/", "packages/cli/bin.mjs", "packages/mcp/server.mjs", "README.md", "LICENSE". Si algun modulo de dist necesita dependencias de runtime (revisa packages/core/package.json), muevelas a "dependencies" del package.json raiz.
+5. Agrega dist/ y *.tgz a .gitignore.
+6. Crea tests/e2e/pack.test.mjs (node:test, sin dependencias nuevas) que: ejecute `npm pack --pack-destination <tmp>` en la raiz, cree otra carpeta temporal con un package.json minimo, haga `npm install <ruta del tgz>`, ejecute el bin instalado node_modules/kiro-radar/packages/cli/bin.mjs con `scan <ruta absoluta a fixtures/excellent> --json` y verifique que el JSON tiene un total numerico > 0; luego lance node_modules/kiro-radar/packages/mcp/server.mjs, le envie por stdin un initialize y un tools/list JSON-RPC (mira packages/mcp/test para el formato que ya se usa) y verifique que la respuesta lista la herramienta de escaneo. Usa child_process con shell:true solo para npm (Windows necesita npm.cmd), timeout de 180 s, y borra las carpetas temporales al final.
+7. No cambies packages/core/src/types.ts ni la logica de puntaje. No toques power/ en esta tarea.
+Al terminar, lista los archivos que cambiaste.

@@ -4,10 +4,10 @@ Fuente de verdad del **estado**. Las reglas viven en `AGENTS.md`; el detalle del
 
 ## Estado actual
 
-- **Fase:** 2, WP-02 (spec radar-core).
+- **Fase:** WP-10 (release a producción), en pausa por créditos. WP-01, WP-02 (core + CLI) y WP-04/06 (MCP + Power) fusionados en `main` (151ae3f). 29/29 pruebas, autoescaneo 72/100.
 - **Repositorio:** https://github.com/HenryStark866/kiro-radar (público, rama `main`).
-- **Kiro:** instalado, sesión de henrytaborda57@gmail.com, plan Free con 0 de 50 créditos usados el 2026-10-30. El contador se reinicia el 2026-11-01.
-- **Siguiente paso:** Henry revisa `.kiro/specs/radar-core/requirements.md` (compuerta G2).
+- **Kiro:** sesión de henrytaborda57@gmail.com, plan Free. El 2026-11-04 estaban agotados los 50 créditos del mes y los 1.000 de bonificación KiroDayMed25. **El contador se reinicia el 2026-12-01** (lo dice `/usage` en Kiro CLI).
+- **Siguiente paso:** el 2026-12-01, lanzar K1 con `docs/coordination/prompts/K1-release.txt` en la rama `wp/WP-10-release`. Después siguen K2 a K4 de `docs/reviews/PRODUCCION-2026-10-30.md`.
 - **Fecha límite del reto:** desconocida. Henry debe confirmarla.
 - **Canal de entrega:** desconocido. Henry debe confirmarlo.
 
@@ -66,3 +66,4 @@ Formato: `AAAA-MM-DD | agente | WP | qué pasó`. Solo agregar al final.
 - 2026-10-30 | Claude Code | WP-04/06 | Henry aprobó en el chat agregar servidor MCP y Power antes de publicar. Rama wp/WP-04.
 - 2026-10-30 | Claude Code | WP-04/06 | Kiro generó servidor MCP (packages/mcp), .kiro/settings/mcp.json y power/kiro-radar (plugin.json, mcp.json, skill, README). 29/29 pruebas, autoescaneo 72. M1-M4 corregidos. M5 y M6 abiertos: Kiro llegó al límite mensual de créditos.
 - 2026-10-30 | Claude Code | WP-04/06 | Henry aprobó en el chat fusionar WP-04 (MCP y Power) a main y subirlo.
+- 2026-11-04 | Claude Code | WP-10 | K1 (paquete instalable) no corrió: Kiro respondió "monthly usage limit has been reached". Henry decidió en el chat esperar al reinicio del 2026-12-01 en vez de comprar Pro. Prompt guardado en docs/coordination/prompts/K1-release.txt. Rama y lock retirados.
